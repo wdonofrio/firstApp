@@ -8,6 +8,7 @@ from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 
 class PongPaddle(Widget):
@@ -72,20 +73,27 @@ class PongGame(Widget):
     def quit_game(self, *args):
         App.get_running_app().stop()
 
-class MainMenu(FloatLayout):
+class MainMenu(BoxLayout):
     def __init__(self, **kwargs):
         super(MainMenu, self).__init__(**kwargs)
 
-        self.label = Label(text='PONG GAME', font_size=50, size_hint=(1, 0.2), pos_hint={'top': 1})
-        self.add_widget(self.label)
+        # set the orientation and padding of the BoxLayout
+        self.orientation = 'vertical'
+        self.padding = 50
+        
+        # add the Pong Game title
+        title = Label(text='PONG GAME', font_size=50, size_hint=(1, 0.5))
+        self.add_widget(title)
 
-        self.play_button = Button(text='PLAY', font_size=30, size_hint=(0.5, 0.2), pos_hint={'x': 0.25, 'y': 0.4})
-        self.play_button.bind(on_release=self.start_pong)
-        self.add_widget(self.play_button)
+        # add the play button
+        play_button = Button(text='PLAY', font_size=30, size_hint=(1, 0.3), background_color=[0, 1, 0, 1])
+        play_button.bind(on_release=self.start_pong)
+        self.add_widget(play_button)
 
-        self.quit_button = Button(text='QUIT', font_size=30, size_hint=(0.5, 0.2), pos_hint={'x': 0.25, 'y': 0.2})
-        self.quit_button.bind(on_release=self.quit_game)
-        self.add_widget(self.quit_button)
+        # add the quit button
+        quit_button = Button(text='QUIT', font_size=30, size_hint=(1, 0.2), background_color=[1, 0, 0, 1])
+        quit_button.bind(on_release=self.quit_game)
+        self.add_widget(quit_button)
 
     def start_pong(self, *args):
         game = PongGame()

@@ -53,17 +53,12 @@
 <MainMenu>:
     canvas.before:
         Color:
-            rgba: 0.2, 0.2, 0.2, 1  # change the color to your desired background color
-        Rectangle:
+            rgba: 0.2, 0.2, 0.2, 1
+        RoundedRectangle:
             pos: self.pos
             size: self.size
+            radius: [60, 60, 0, 0]
     Label:
         text: 'Welcome to Pong!'
         font_size: 70
         pos_hint: {'center_x': 0.5, 'center_y': 0.8}
-    Button:
-        text: 'Start Game'
-        font_size: 50
-        size_hint: (0.4, 0.2)
-        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        on_release: app.root.current = 'game'
