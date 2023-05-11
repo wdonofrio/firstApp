@@ -5,19 +5,22 @@
     canvas:
         Ellipse:
             pos: self.pos
-            size: self.size          
+            size: self.size
 
 <PongPaddle>:
-    size: 25, 200
-    canvas:
-        Rectangle:
+    size: 200, 25
+    canvas.before:
+        # Draw a patterned background
+        Color:
+            rgb: 1, 1, 1
+        RoundedRectangle:
             pos: self.pos
             size: self.size
+            radius: [10, 10, 10, 10]
 
 <PongGame>:
     ball: pong_ball
-    player1: player_left
-    player2: player_right
+    player: player
     
     canvas:
         Rectangle:
@@ -25,30 +28,19 @@
             size: 10, self.height
     
     Label:
-        font_size: 70  
-        center_x: root.width / 4
+        font_size: 70
+        center_x: root.width / 2
         top: root.top - 50
-        text: str(root.player1.score)
-        
-    Label:
-        font_size: 70  
-        center_x: root.width * 3 / 4
-        top: root.top - 50
-        text: str(root.player2.score)
-    
+        text: str(root.player.score)
+
     PongBall:
         id: pong_ball
         center: self.parent.center
         
     PongPaddle:
-        id: player_left
+        id: player
         x: root.x
-        center_y: root.center_y
-        
-    PongPaddle:
-        id: player_right
-        x: root.width - self.width
-        center_y: root.center_y
+        center_x: root.center_x
 
 <MainMenu>:
     canvas.before:
@@ -59,6 +51,6 @@
             size: self.size
             radius: [60, 60, 0, 0]
     Label:
-        text: 'Welcome to Pong!'
+        text: 'Welcome to Bricks!'
         font_size: 70
         pos_hint: {'center_x': 0.5, 'center_y': 0.8}
