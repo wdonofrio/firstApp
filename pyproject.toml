@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "willbrick"
+version = "0.1.0"
+description = ""
+authors = ["William D'Onofrio"]
+license = "GPL v3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Kivy = "^2.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
