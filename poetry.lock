@@ -237,6 +237,16 @@ files = [
 requests = "*"
 
 [[package]]
+name = "logging"
+version = "0.4.9.6"
+description = "A logging module for Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "logging-0.4.9.6.tar.gz", hash = "sha256:26f6b50773f085042d301085bd1bf5d9f3735704db9f37c1ce6d8b85c38f2417"},
+]
+
+[[package]]
 name = "pygments"
 version = "2.15.1"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -328,4 +338,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "d33d9a4ca3f15751782b91c9230300a104c9bd6dda1791f295a2feb5acfc08eb"
+content-hash = "8cefc5acc58c1a963b49471d7fdb9d2adbf1ae8672d6e57403384e9a8a1acb60"
