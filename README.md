@@ -1,2 +1,2 @@
-# My First App
-Testing out Kivy
+# WillBrick
+A Bricks Game developed using Kivy.
