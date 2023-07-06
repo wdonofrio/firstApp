@@ -2,6 +2,7 @@ from src.logging_config import logger
 from src.decorators import log_method
 
 import csv
+from random import randint
 
 from kivy.app import App
 from kivy.properties import (
@@ -22,34 +23,50 @@ from kivy.core.audio import SoundLoader
 POP_SOUND = SoundLoader.load('audio/POP.WAV')
 
 class ConcreteObject():
+    @log_method
     def bounce_ball(self, ball, velocity = 1.0):
         if self.collide_widget(ball):
-            vx, vy = ball.velocity
-            offset = (ball.center_y - self.center_y) / (self.height / 2)
-            bounced = Vector(vx, vy)
-            vel = bounced * velocity
-            ball.velocity = vel.x, vel.y + offset
+            offset_x = (ball.center_x - self.center_x) / (self.width / 2)
+            offset_y = (ball.center_y - self.center_y) / (self.height / 2)
+            logger.info(f'{offset_x}, {offset_y}')
+            # Adjust the offset based on which corner the ball collides with
+            if offset_x > 0:
+                offset_x = 1 - offset_x
+            else:
+                offset_x = -1 - offset_x
+
+            if offset_y > 0:
+                offset_y = 1 - offset_y
+            else:
+                offset_y = -1 - offset_y
+
+            ball.velocity = (ball.velocity[0] * velocity + offset_x, ball.velocity[1] * velocity + offset_y)
             POP_SOUND.play()
 
 class Brick(Widget, ConcreteObject):
     def __init__(self, **kwargs):
         super(Brick, self).__init__(**kwargs)
-        self.size = 40, 40
+        self.width, self.height = 30,30
+        self.size = (self.width, self.height)
+        self.position = 0, 0
+        
+    @log_method
+    def set_position(self, row_index, col_index):
+        brick_width, brick_height = self.size
+        spacing_x = 1
+        spacing_y = 1
 
-class PlayerPaddle(Widget, ConcreteObject):
-    pass
+        start_x = 0
+        start_y = self.top
 
-class GameBall(Widget):
-    velocity_x = NumericProperty(0)
-    velocity_y = NumericProperty(0)
-    velocity = ReferenceListProperty(velocity_x, velocity_y)
+        x = start_x + col_index * (brick_width/2 + spacing_x)
+        y = start_y - row_index * (brick_height/2 + spacing_y)
 
-    def move(self):
-        self.pos = Vector(*self.velocity) * 2 + self.pos
+        self.position = x, y
 
-class Game(Widget):
+class Bricks:
     def __init__(self, **kwargs):
-        super(Game, self).__init__(**kwargs)
+        super(Bricks, self).__init__(**kwargs)
         self.bricks = []
 
     @log_method
@@ -61,27 +78,31 @@ class Game(Widget):
                 for col_index, cell in enumerate(row):
                     if cell == '1':
                         brick = Brick()
-                        brick.pos = self.calculate_brick_position(row_index, col_index)
-                        self.bricks.append(brick)
+                        self.bricks.append(brick.set_position(row_index, col_index))
                         self.add_widget(brick)
 
+class PlayerPaddle(Widget, ConcreteObject):
+    pass
+
+class GameBall(Widget):
+    velocity_x = NumericProperty(0)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
+
+    def move(self):
+        self.pos = Vector(*self.velocity) * 5 + self.pos
+
+class Game(Widget):
+    def __init__(self, **kwargs):
+        super(Game, self).__init__(**kwargs)
+        self.Bricks = Bricks()
+
+
+
+
+
     @log_method
-    def calculate_brick_position(self, row_index, col_index):
-        brick_width = 40
-        brick_height = 40
-        spacing_x = 10
-        spacing_y = 10
-
-        start_x = 0
-        start_y = self.height
-
-        x = start_x + col_index * (brick_width + spacing_x)
-        y = start_y - row_index * (brick_height + spacing_y)
-
-        return x, y
-
-    @log_method
-    def serve_ball(self, vel=(1, 4)):
+    def serve_ball(self, vel= (0, 0)):
         self.ball.center = self.center
         self.ball.velocity = vel
 
@@ -90,7 +111,6 @@ class Game(Widget):
 
         # bounce of paddles
         self.player.bounce_ball(self.ball)
-        # self.brick.bounce_ball(self.ball)
 
         # bounce ball off top, left, or right
         if self.ball.top > self.top:
@@ -101,22 +121,21 @@ class Game(Widget):
             self.ball.velocity_x *= -1
 
         # Check collision with the bricks
-        collided_bricks = []
         for brick in self.bricks:
-            if self.ball.collide_widget(brick):
-                collided_bricks.append(brick)
-
-        for brick in collided_bricks:
+            brick.bounce_ball(self.ball)
             self.remove_widget(brick)
-            self.bricks.remove(brick)
 
-            # Adjust ball velocity after collision
+            # # Adjust ball velocity after collision
+            # self.ball.velocity_y *= -1
+
+        # Bounce ball off bottom of the screen
+        if self.ball.y < 0:
             self.ball.velocity_y *= -1
 
         # ball falls to through the bottom
-        if self.ball.y < self.y-50:
-            logger.info("Ball fell through the bottom")
-            exit(0)
+        # if self.ball.y < self.y-50:
+        #     logger.info("Ball fell through the bottom")
+        #     exit(0)
 
     def on_touch_move(self, touch):
         if touch.y < self.width / 3:
@@ -126,8 +145,8 @@ class Game(Widget):
     def start_game(self, *args):
         # self.bricks_grid = GridLayout(cols=8, spacing=10)
         # self.add_widget(self.bricks_grid)
-        self.load_bricks_from_csv('levels/level1.csv')
-        self.serve_ball()
+        self.Bricks.load_bricks_from_csv('levels/level1.csv')
+        self.serve_ball((randint(1,10), randint(1,10)))
         Clock.schedule_interval(self.update, 1.0 / 60.0)
 
     def quit_game(self, *args):
