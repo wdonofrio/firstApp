@@ -1,5 +1,5 @@
-from src.logging_config import logger
 import time
+from src.logging_config import logger
 
 
 def log_method(func):

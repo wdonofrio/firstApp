@@ -1,6 +1,3 @@
-from src.logging_config import logger
-from src.decorators import log_method
-
 import csv
 from random import randint
 
@@ -16,7 +13,10 @@ from kivy.uix.label import Label
 
 from kivy.core.audio import SoundLoader
 
-POP_SOUND = SoundLoader.load("audio/POP.WAV")
+from src.logging_config import logger
+from src.decorators import log_method
+
+POP_SOUND = SoundLoader.load("src/audio/POP.WAV")
 
 
 class ConcreteObject:
