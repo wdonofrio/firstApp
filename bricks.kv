@@ -10,7 +10,7 @@
             radius: [1, 1, 1, 1]  # Set the corner radius of the rounded square
 
 <GameBall>:
-    size: 20, 20 
+    size: 20, 20
     canvas:
         Ellipse:
             pos: self.pos
@@ -29,12 +29,12 @@
 <Game>:
     ball: game_ball
     player: player
-    
+
     canvas:
         Rectangle:
             pos: self.center_x - 5, 0
             size: 10, self.height
-    
+
     Label:
         font_size: 70
         center_x: root.width / 2
@@ -43,7 +43,7 @@
     GameBall:
         id: game_ball
         center: self.parent.center
-        
+
     PlayerPaddle:
         id: player
         x: root.x
