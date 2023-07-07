@@ -2,14 +2,14 @@ from csv import reader
 from typing import List
 
 from kivy.uix.widget import Widget
-from src.objects import ConcreteObject
 
+from src.objects import ConcreteObject
 from src.decorators import log_method
 
 
-class Brick(Widget, ConcreteObject):
+class Brick(ConcreteObject):
     def __init__(self, **kwargs):
-        super(Brick, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.width, self.height = 30, 30
         self.size = (self.width, self.height)
 
@@ -29,7 +29,7 @@ class Brick(Widget, ConcreteObject):
 
 class Bricks(Widget):
     def __init__(self, **kwargs):
-        super(Bricks, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.bricks = []
 
     def add(self, brick: Brick) -> None:
