@@ -1,4 +1,5 @@
 from csv import reader
+from typing import List
 
 from kivy.uix.widget import Widget
 from src.objects import ConcreteObject
@@ -12,7 +13,6 @@ class Brick(Widget, ConcreteObject):
         self.width, self.height = 30, 30
         self.size = (self.width, self.height)
 
-    @log_method
     def set_position(self, row_index, col_index):
         brick_width, brick_height = self.size
         spacing_x = 1
@@ -32,6 +32,15 @@ class Bricks(Widget):
         super(Bricks, self).__init__(**kwargs)
         self.bricks = []
 
+    def add(self, brick: Brick) -> None:
+        self.bricks.append(brick)
+
+    def remove(self, brick: Brick) -> None:
+        self.bricks.remove(brick)
+
+    def get_bricks(self) -> List[Brick]:
+        return self.bricks
+
     @log_method
     def load_bricks_from_csv(self, csv_file):
         with open(csv_file, "r") as file:
@@ -41,5 +50,6 @@ class Bricks(Widget):
                 for col_index, cell in enumerate(row):
                     if cell == "1":
                         brick = Brick()
-                        self.bricks.append(brick.set_position(row_index, col_index))
+                        brick.set_position(row_index, col_index)
+                        self.add(brick)
                         self.add_widget(brick)

@@ -23,10 +23,6 @@ class GameBall(Widget):
     def move(self):
         self.pos = Vector(*self.velocity) * 5 + self.pos
 
-    def on_touch_move(self, touch):
-        if touch.y < self.width / 3:
-            self.player.center_x = touch.x
-
 
 class MainMenu(BoxLayout):
     def __init__(self, **kwargs):
