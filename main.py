@@ -11,15 +11,13 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 
-from kivy.core.audio import SoundLoader
-
 from src.logging_config import logger
 from src.decorators import log_method
-
-POP_SOUND = SoundLoader.load("src/audio/POP.WAV")
-
+from src.resources import POP_SOUND
 
 class ConcreteObject:
+    position = 0, 0
+
     @log_method
     def bounce_ball(self, ball, velocity=1.0):
         if self.collide_widget(ball):
@@ -49,7 +47,6 @@ class Brick(Widget, ConcreteObject):
         super(Brick, self).__init__(**kwargs)
         self.width, self.height = 30, 30
         self.size = (self.width, self.height)
-        self.position = 0, 0
 
     @log_method
     def set_position(self, row_index, col_index):
@@ -66,7 +63,7 @@ class Brick(Widget, ConcreteObject):
         self.position = x, y
 
 
-class Bricks:
+class Bricks(Widget):
     def __init__(self, **kwargs):
         super(Bricks, self).__init__(**kwargs)
         self.bricks = []
@@ -122,7 +119,7 @@ class Game(Widget):
             self.ball.velocity_x *= -1
 
         # Check collision with the bricks
-        for brick in self.bricks:
+        for brick in self.Bricks.bricks:
             brick.bounce_ball(self.ball)
             self.remove_widget(brick)
 
@@ -144,8 +141,6 @@ class Game(Widget):
 
     @log_method
     def start_game(self, *args):
-        # self.bricks_grid = GridLayout(cols=8, spacing=10)
-        # self.add_widget(self.bricks_grid)
         self.Bricks.load_bricks_from_csv("src/levels/level1.csv")
         self.serve_ball((randint(1, 10), randint(1, 10)))
         Clock.schedule_interval(self.update, 1.0 / 60.0)

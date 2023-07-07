@@ -12,6 +12,7 @@ console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(levelname)s: %(message)s")
 console.setFormatter(formatter)
+console.terminator = "/n"
 logging.getLogger("").addHandler(console)
 
 # Create a logger
