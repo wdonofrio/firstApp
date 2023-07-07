@@ -10,7 +10,7 @@ from src.decorators import log_method
 
 class Game(Widget):
     def __init__(self, **kwargs):
-        super(Game, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.Bricks = Bricks()
 
     def on_touch_move(self, touch):

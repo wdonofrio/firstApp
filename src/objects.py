@@ -1,9 +1,14 @@
+from kivy.uix.widget import Widget
+
 from src.logging_config import logger
 from src.resources import POP_SOUND
 
 
-class ConcreteObject:
+class ConcreteObject(Widget):
     position = 0, 0
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def collides_with(self, obj) -> bool:
         return self.collide_widget(obj)

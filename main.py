@@ -11,7 +11,7 @@ from src.objects import ConcreteObject
 from src.game import Game
 
 
-class PlayerPaddle(Widget, ConcreteObject):
+class PlayerPaddle(ConcreteObject):
     pass
 
 
@@ -26,7 +26,7 @@ class GameBall(Widget):
 
 class MainMenu(BoxLayout):
     def __init__(self, **kwargs):
-        super(MainMenu, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         # set the orientation and padding of the BoxLayout
         self.orientation = "vertical"
