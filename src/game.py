@@ -13,16 +13,33 @@ class Game(Widget):
         super(Game, self).__init__(**kwargs)
         self.Bricks = Bricks()
 
+    def on_touch_move(self, touch):
+        if touch.y < self.width / 3:
+            self.player.center_x = touch.x
+
     @log_method
     def serve_ball(self, vel=(0, 0)):
         self.ball.center = self.center
         self.ball.velocity = vel
 
+    def update_bricks(self, ball):
+        bricks_to_remove = []
+
+        brick_units = self.Bricks.get_bricks()
+        for brick in brick_units:
+            brick.bounce_obj(ball)
+            if brick.collides_with(ball):
+                bricks_to_remove.append(brick)
+
+        for brick in bricks_to_remove:
+            self.remove_widget(brick)
+            self.Bricks.remove(brick)
+
     def update(self, dt):
         self.ball.move()
 
         # bounce of paddles
-        self.player.bounce_ball(self.ball)
+        self.player.bounce_obj(self.ball)
 
         # bounce ball off top, left, or right
         if self.ball.top > self.top:
@@ -33,12 +50,7 @@ class Game(Widget):
             self.ball.velocity_x *= -1
 
         # Check collision with the bricks
-        for brick in self.Bricks.bricks:
-            brick.bounce_ball(self.ball)
-            self.remove_widget(brick)
-
-            # # Adjust ball velocity after collision
-            # self.ball.velocity_y *= -1
+        self.update_bricks(self.ball)
 
         # Bounce ball off bottom of the screen
         if self.ball.y < 0:
