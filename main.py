@@ -15,6 +15,7 @@ from src.logging_config import logger
 from src.decorators import log_method
 from src.resources import POP_SOUND
 
+
 class ConcreteObject:
     position = 0, 0
 
