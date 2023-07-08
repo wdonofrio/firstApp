@@ -1,27 +1,11 @@
 from kivy.app import App
-from kivy.properties import NumericProperty, ReferenceListProperty
-from kivy.vector import Vector
 
-from kivy.uix.widget import Widget
+
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 
-from src.objects import ConcreteObject
 from src.game import Game
-
-
-class PlayerPaddle(ConcreteObject):
-    pass
-
-
-class GameBall(Widget):
-    velocity_x = NumericProperty(0)
-    velocity_y = NumericProperty(0)
-    velocity = ReferenceListProperty(velocity_x, velocity_y)
-
-    def move(self):
-        self.pos = Vector(*self.velocity) * 5 + self.pos
 
 
 class MainMenu(BoxLayout):
