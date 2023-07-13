@@ -2,29 +2,44 @@ from csv import reader
 from typing import List
 
 from kivy.uix.widget import Widget
+from kivy.core.window import Window
+from kivy.graphics import Color, RoundedRectangle
 
 from src.objects import ConcreteObject
 from src.decorators import log_method
 
 
 class Brick(ConcreteObject):
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.width, self.height = 30, 30
+        self.radius = [Window.width * 0.01, Window.width * 0.01, Window.width * 0.01, Window.width * 0.01]
+        self.rectangle = RoundedRectangle(radius=self.radius)
+        self.size_hint = (None, None)  # Remove the size_hint property
+        self.width = Window.width * 0.03
+        self.height = Window.width * 0.03
         self.size = (self.width, self.height)
+        self.canvas.add(self.rectangle)
+        with self.canvas.before:
+            Color(1, 1, 1)
 
     def set_position(self, row_index, col_index):
         brick_width, brick_height = self.size
-        spacing_x = 1
-        spacing_y = 1
+        spacing_x = Window.width * 0.001
+        spacing_y = Window.width * 0.001
 
         start_x = 0
-        start_y = self.top
+        start_y = 0
 
         x = start_x + col_index * (brick_width / 2 + spacing_x)
         y = start_y - row_index * (brick_height / 2 + spacing_y)
 
-        self.position = x, y
+        self.pos = x, y
+
+    def on_pos(self, *args):
+        self.rectangle.pos = self.pos
+
+    def on_size(self, *args):
+        self.rectangle.size = self.size
 
 
 class Bricks(Widget):

@@ -1,30 +1,6 @@
 #:kivy 1.0.9
 
-<Brick>:
-    canvas:
-        Color:
-            rgba: 0.4, 0.4, 0.4, 1  # Set the color of the brick (e.g., gray)
-        RoundedRectangle:
-            pos: self.position
-            size: self.size
-            radius: [1, 1, 1, 1]  # Set the corner radius of the rounded square
 
-<GameBall>:
-    size: 10, 10
-    canvas:
-        Ellipse:
-            pos: self.pos
-            size: self.size
-
-<PlayerPaddle>:
-    size: 100, 10
-    canvas.before:
-        Color:
-            rgb: 1, 1, 1
-        RoundedRectangle:
-            pos: self.pos
-            size: self.size
-            radius: [10, 10, 10, 10]
 
 <Game>:
     ball: game_ball
