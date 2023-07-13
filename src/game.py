@@ -4,18 +4,59 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.vector import Vector
-
+from kivy.core.window import Window
 
 from src.objects import ConcreteObject
+from kivy.graphics import Ellipse
 from src.bricks import Bricks
 from src.decorators import log_method
 
+from kivy.graphics import Color, RoundedRectangle
+
 
 class PlayerPaddle(ConcreteObject):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.radius = [Window.width * 0.01, Window.width * 0.01, Window.width * 0.01, Window.width * 0.01]
+        self.rectangle = RoundedRectangle(radius=self.radius)
+        self.size_hint = (None, None)  # Remove the size_hint property
+        self.size = Window.width * 0.1, Window.width * 0.015
+        self.canvas.add(self.rectangle)
+        with self.canvas.before:
+            Color(1, 1, 1)
+
+    def on_pos(self, *args):
+        self.rectangle.pos = self.pos
+
+    def on_size(self, *args):
+        self.rectangle.size = self.size
+
+    def center_paddle(self):
+        center_x = (Window.width - self.width) / 2
+        center_y = 0 + self.height
+
+        # Set the center position of the paddle
+        self.center = (center_x, center_y)
+
+    def on_parent(self, widget, parent) -> None:
+        if parent:
+            self.center_paddle()
 
 
 class GameBall(Widget):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.ellipse = Ellipse()
+        self.size_hint = (None, None)  # Remove the size_hint property
+        self.size = Window.width * 0.01, Window.width * 0.01
+        self.canvas.add(self.ellipse)
+
+    def on_pos(self, *args):
+        self.ellipse.pos = self.pos
+
+    def on_size(self, *args):
+        self.ellipse.size = self.size
+
     def move(self):
         self.pos = Vector(*self.velocity) * 5 + self.pos
 
